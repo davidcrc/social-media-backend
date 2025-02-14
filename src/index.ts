@@ -1,11 +1,11 @@
-import express from 'express';
-import userRoutes from './routes/user.routes.js';
+import express from "express";
+import userRoutes from "./routes/user.routes.js";
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 app.use(express.json());
-app.use('/api', userRoutes);
+app.use("/api", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
