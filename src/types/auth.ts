@@ -1,9 +1,9 @@
 // import { User } from "./user.js";
 
-import { User } from "@prisma/client";
+import { UserMetaData } from "@prisma/client";
 
 export type Session = {
-  user: User | null;
+  user: UserMetaData | null;
   token: string | null;
 };
 

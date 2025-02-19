@@ -8,6 +8,67 @@ datasource db {
 }
 
 model User {
+  id          String   @id @default(uuid())
+  name        String   @default("name")
+  image       String   @default("image")
+  bio         String   @default("bio")
+  address     String   @default("address")
+  phoneNumber String   @default("phoneNumber")
+  email       String   @unique
+  createdAt   DateTime @default(now())
+
+  posts                 Posts[]
+  comments              Comments[]
+  postLikes             PostLikes[]
+  senderNotifications   Notifications[] @relation("Sender")
+  receiverNotifications Notifications[] @relation("Receiver")
+
+  metaData UserMetaData?
+}
+
+model Posts {
+  id        String   @id @default(uuid())
+  title     String   @default("title")
+  body      String   @default("body")
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+
+  comments  Comments[]
+  postLikes PostLikes[]
+}
+
+model Comments {
+  id        String   @id @default(uuid())
+  text      String   @default("text")
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  post      Posts    @relation(fields: [postId], references: [id])
+  postId    String
+}
+
+model PostLikes {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  post      Posts    @relation(fields: [postId], references: [id])
+  postId    String
+}
+
+model Notifications {
+  id         String   @id @default(uuid())
+  title      String   @default("title")
+  data       String   @default("data")
+  createdAt  DateTime @default(now())
+  senderId   String
+  sender     User     @relation("Sender", fields: [senderId], references: [id])
+  receiverId String
+  receiver   User     @relation("Receiver", fields: [receiverId], references: [id])
+}
+
+model UserMetaData {
   id                 String    @id @default(uuid())
   aud                String    @default("authenticated")
   role               String    @default("user")
@@ -21,4 +82,7 @@ model User {
   identities         Json      @default("[]")
   created_at         DateTime  @default(now())
   updated_at         DateTime  @updatedAt
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
 }
